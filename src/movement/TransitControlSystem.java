@@ -239,34 +239,23 @@ class TransitControlSystem {
 		}
 		
 		// Walk the path up to the end destination, creating a list of nodes
+		// Assume that a predecessor has at most one successor (decidable)
 		// Return the list.
 		nodeList.add(map.getNodeByCoord(currNode.getLocation()));
 				
 		MapNode lastNode = stops.get(stops.size()-1).node;
 		MapNode lastWayNode = null;
+		MapNode succ = null;
 		
 		while(currNode.compareTo(lastNode) != 0) {
-			// each node has at most 2 neighbors
-			if (currNode.getNeighbors().size() > 2) {
-				System.out.println(currNode.toString() + ": neighbors: " + currNode.getNeighbors().toString());
-				System.out.println("A node should have, at this point, at most 2 neighbors.");
-				System.exit(1);				
+			if (lastWayNode == null) {
+				succ = currNode.getNeighbors().get(0);
+			} else {
+				succ = currNode.getSuccessor(lastWayNode);
 			}
-			// the neighbor is different than last
-			for (MapNode neighbor: currNode.getNeighbors()) {
-				if (lastWayNode == null || neighbor.compareTo(lastWayNode) != 0) {
-					Coord c = neighbor.getLocation();
-					MapNode n = map.getNodeByCoord(c);
-					if (n != null) {
-						nodeList.add(n);
-					} else {
-						throw new SettingsError("Stop " + c + " is not a valid Map node");
-					}
-					lastWayNode = currNode;
-					currNode = neighbor;
-					break;
-				}
-			}
+			lastWayNode = currNode;
+			nodeList.add(map.getNodeByCoord(succ.getLocation()));
+			currNode = succ;
 		}
 		
 		return nodeList;

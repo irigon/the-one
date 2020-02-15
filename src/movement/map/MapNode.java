@@ -4,6 +4,7 @@
  */
 package movement.map;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
@@ -27,6 +28,22 @@ public class MapNode implements Comparable<MapNode> {
 	// bit mask of map node's types or 0 if no type's are defined
 	private long type;
 
+	public class Pair<L,R> {
+	    private L l;
+	    private R r;
+	    public Pair(L l, R r){
+	        this.l = l;
+	        this.r = r;
+	    }
+	    public L getL(){ return l; }
+	    public R getR(){ return r; }
+	    public void setL(L l){ this.l = l; }
+	    public void setR(R r){ this.r = r; }
+	}
+	
+	Pair<MapNode, MapNode> predSuccIncomplete;
+	List<Pair<MapNode, MapNode>> predSucc = new ArrayList<Pair<MapNode, MapNode>>();
+	
 	/**
 	 * Constructor. Creates a map node to a location.
 	 * @param location The location of the node.
@@ -147,4 +164,48 @@ public class MapNode implements Comparable<MapNode> {
 	public long getType() {
 		return type;
 	}
+
+	/**
+	 * Add a new predecessor without successor
+	 * Hold a variable to be completed with the successor
+	 * @return 
+	 */
+	public void addPred(MapNode prev) {
+		if (prev == null) { 
+			prev = this;
+		}
+		Pair p = new Pair(prev,null);
+		predSucc.add(p);
+		predSuccIncomplete = p; 
+		
+	}
+	
+	/*
+	 * Add a successor to the incomplete variable
+	 * Nodes are added sequentially, there should
+	 * be only one node incomplete at this time
+	 */
+	public void addSuc(MapNode succ) {
+		if (succ == predSuccIncomplete.getL()) {
+			System.out.println(this.toString() + " has the same successor and predecessor: " + succ.toString());
+			System.exit(1);
+		}
+		if (predSuccIncomplete.getL() != this) {
+			predSuccIncomplete.setR(succ);
+		}
+	}
+
+	
+	public MapNode getSuccessor(MapNode pred) {
+		MapNode suc = null;
+		for (Pair<MapNode, MapNode> pair : predSucc) {
+			if (pair.getL() == pred) {
+				suc = pair.getR();
+				break;
+			}
+		}
+		assert suc != null;
+		return suc;
+	}
+
 }
