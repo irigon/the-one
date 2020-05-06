@@ -7,6 +7,7 @@ package ui;
 import java.util.Vector;
 
 import report.Report;
+import routing.cgr.ContactPlanHandler;
 import core.ApplicationListener;
 import core.ConnectionListener;
 import core.MessageListener;
@@ -132,6 +133,7 @@ public abstract class DTNSimUI {
 		for (Report r : this.reports) {
 			r.done();
 		}
+		ContactPlanHandler.get().prepare_to_write(world);
 	}
 
 	/**
