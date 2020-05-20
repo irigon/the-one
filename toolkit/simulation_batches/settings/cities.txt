@@ -53,7 +53,7 @@ btInterface.transmitRange = 20
 
 
 #Group.router = [EpidemicRouter;ProphetV2Router;MaxPropRouter;SprayAndWaitRouter]
-Group.router = [EpidemicRouter;ProphetV2Router;SprayAndWaitRouter]
+Group.router = ContactGraphRouter
 Group.bufferSize = 500G
 Group.waitTime = 10,15
 # All nodes have the bluetooth interface
