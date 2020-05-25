@@ -79,7 +79,7 @@ for scenario in scenario_list:
         scenario_name = scenario.split('_')[0]
         # ignore simulations that were performed
         #report_name = "{}_Group.router:{}_Group.bufferSize:{}_Group.msgTtl:{}_Events1.size:{}_Scenario.endTime:{}_MovementModel.warmup:{}_Events1.interval:{}_Scenario.updateInterval:{}_MessageStatsReport.txt".format(
-        name_var="{}_router:{}_bSize:{}_Ttl:{}_Events1.size:{}_endTime:{}_warmup:{}_Events1.interval:{}_updateInt:{}_beta:{}_gamma:{}_tSpeed:{}_tRange:{}_seed:{}"
+        name_var="{}_router:{}_bSize:{}_Ttl:{}_Events1.size:{}_endTime:{}_warmup:{}_Events1.interval:{}_updateInt:{}_beta:{}_gamma:{}_tSpeed:{}_tRange:{}_seed:{}_SaWbin:{}_SaWcp:{}"
         end_name = name_var.format( # end_name is used to name the reports and output data
             scenario_name,
             entry['Group.router'],
@@ -95,6 +95,8 @@ for scenario in scenario_list:
             entry['btInterface.transmitSpeed'],
             entry['btInterface.transmitRange'],
             entry['MovementModel.rngSeed'],
+            entry['SprayAndWaitRouter.binaryMode'],
+            entry['SprayAndWaitRouter.nrofCopies']
         )
         # scen config is used in the default configuration
         scen_config_name = name_var.format( 
@@ -112,6 +114,8 @@ for scenario in scenario_list:
             "%%btInterface.transmitSpeed%%",
             "%%btInterface.transmitRange%%",
             "%%MovementModel.rngSeed%%",
+            "%%SprayAndWaitRouter.binaryMode%%",
+            "%%SprayAndWaitRouter.nrofCopies%%"
         )
 
 
