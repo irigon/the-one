@@ -234,8 +234,13 @@ public class ContactGraphRouter extends ActiveRouter {
 
 	@Override
 	public boolean createNewMessage(Message m) {
-		if (!create_cplan && getFreeBufferSize() > m.getSize() && isMessageDeliverable(m)) {
-			return super.createNewMessage(m);
+		if (!create_cplan && getFreeBufferSize() > m.getSize() ) {
+			boolean result = super.createNewMessage(m);
+			if (isMessageDeliverable(m)) {
+				return result;
+			} else {
+				deleteMessage(m.getId(), true);
+			}
 		}
 		return false;
 	}
