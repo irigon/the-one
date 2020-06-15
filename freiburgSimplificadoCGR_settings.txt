@@ -1,30 +1,43 @@
 Scenario.name = freiburgSimplificadoCGR
-Scenario.nrofHostGroups = 2
+
+Scenario.nrofHostGroups = 3
 Scenario.endTime = 30000
 
 
 Group.router = ContactGraphRouter
-Group1.groupID = 1_
-Group1.movementModel = TransitMapMovement
-Group1.routeFile = data/freiburgSimplificado/1_stops.csv
-Group1.scheduleFile = data/freiburgSimplificado/1_schedule.csv
-Group1.routeType = 2
-Group1.nrofHosts = 2
-Group1.okMaps = 1
+
+Group1.groupID = S
+Group1.movementModel = StationaryMultiPointMovement
+Group1.stationarySystemNr = 1
+Group1.pointFile = data/freiburgSimplificado/stations.wkt
+Group1.nrofHosts = 47
 
 
-Group2.groupID = S
-Group2.movementModel = StationaryMultiPointMovement
-Group2.stationarySystemNr = 1
-Group2.pointFile = data/freiburgSimplificado/stations.wkt
-Group2.nrofHosts = 22
+Group2.groupID = 1_
+Group2.movementModel = TransitMapMovement
+Group2.routeFile = data/freiburgSimplificado/1_stops.csv
+Group2.scheduleFile = data/freiburgSimplificado/1_schedule.csv
+Group2.routeType = 2
+Group2.nrofHosts = 2
+Group2.okMaps = 1
 
 
-MapBasedMovement.nrofMapFiles = 1
+Group3.groupID = 2_
+Group3.movementModel = TransitMapMovement
+Group3.routeFile = data/freiburgSimplificado/2_stops.csv
+Group3.scheduleFile = data/freiburgSimplificado/2_schedule.csv
+Group3.routeType = 2
+Group3.nrofHosts = 1
+Group3.okMaps = 2
+
+MapBasedMovement.nrofMapFiles = 2
 MapBasedMovement.mapFile1 = data/freiburgSimplificado/1_nodes.wkt
+MapBasedMovement.mapFile2 = data/freiburgSimplificado/2_nodes.wkt
 
-Events1.size = 1M
+Events1.size = 40k
 btInterface.transmitSpeed = 1M
+Events1.interval = 5,5
 
 MovementModel.worldSize = 7978, 7846
-Events1.hosts = 0,22
+Events1.hosts = 7,43
+#Events1.tohosts = 43,43
