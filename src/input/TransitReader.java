@@ -227,12 +227,12 @@ public class TransitReader {
 	 */
 	TransitTrip getTripFromLine(String line, List<TransitStop> alt_stops) {
 		TransitTrip result_tt;
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd:MM:HH:mm:ss");
 		String[] columns = line.split(COMMA_DELIMITER);
 		Date timeStart = null;
 
 		try {
-			timeStart = sdf.parse("00:00:00");
+			timeStart = sdf.parse("01:06:00:00:00");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -247,7 +247,7 @@ public class TransitReader {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		int seconds = (int)(time.getTime() - timeStart.getTime()) / 1000;
+		int seconds = (int)((time.getTime() - timeStart.getTime()) / 1000);
 		int startIndex = Integer.parseInt(columns[1]);
 		int endIndex = Integer.parseInt(columns[2]);
 		TripDirection td = startIndex < endIndex ? TripDirection.FORWARD : TripDirection.BACKWARD;
@@ -397,7 +397,7 @@ public class TransitReader {
 			currentNode = nextNode;
 			index += 1;
 		}
-		System.out.println("Done");
+		//System.out.println("Done");
 	}
 	
 	private double getDistance(MapNode n1, MapNode n2) {
