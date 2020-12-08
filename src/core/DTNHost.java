@@ -347,17 +347,34 @@ public class DTNHost implements Comparable<DTNHost> {
 		forceConnection(h,null,true);
 	}
 
+	private void set_pedestrian_radio() {
+		if (is_pedestrian()) {
+			if (SimClock.getTime() > 39600 && SimClock.getTime() < 61200){
+				setCommunicationSystemON(true);
+			} else {
+				setCommunicationSystemON(false);
+			}
+		}
+	}
+	
+	public boolean is_pedestrian( ) {
+		return (this.name.charAt(0) == 'p');
+	}
+		
+	
 	/**
 	 * Updates node's network layer and router.
 	 * @param simulateConnections Should network layer be updated too
 	 */
 	public void update(boolean simulateConnections) {
+		set_pedestrian_radio();
 		if (!isRadioActive()) {
 			// Make sure inactive nodes don't have connections
 			tearDownAllConnections();
 
+			
             // TODO: change this 5 min to be configurable
-			if (SimClock.getTime() > this.nextTimeToMove - 300) {
+			if (SimClock.getTime() > this.nextTimeToMove - 300 && !is_pedestrian()){
                 setCommunicationSystemON(true);
             }
 
@@ -411,8 +428,6 @@ public class DTNHost implements Comparable<DTNHost> {
 				return;
 			}
 			
-			// A device will move, start the communication system
-			//setCommunicationSystemON(true);
 		}
 
 		possibleMovement = timeIncrement * speed;
