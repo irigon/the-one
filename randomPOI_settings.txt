@@ -1,0 +1,18 @@
+#Scenario.name = freiburg1True
+Scenario.nrofHostGroups = 1
+
+Group1.groupID = p_
+Group1.movementModel = BetweenPOIsMovement
+Group1.pointFile = data/freiburg1True/stations.wkt
+Group1.nrofHosts = 10
+#Group2.okMaps = 2
+
+MapBasedMovement.nrofMapFiles = 5
+MapBasedMovement.mapFile1 = data/freiburg1True/1_nodes.wkt
+MapBasedMovement.mapFile2 = data/freiburg1True/2_nodes.wkt
+MapBasedMovement.mapFile3 = data/freiburg1True/3_nodes.wkt
+MapBasedMovement.mapFile4 = data/freiburg1True/4_nodes.wkt
+MapBasedMovement.mapFile5 = data/freiburg1True/5_nodes.wkt
+
+MovementModel.worldSize = 7978, 7846
+Events1.hosts = 0,2
