@@ -33,7 +33,7 @@ public class BetweenPOIsMovement extends MapBasedMovement {
 		super(s);
 		String fileName = s.getSetting(POINT_FILE_S);
 		availablePoints = this.readPoints(fileName);
-		loc = getInitialLocation();
+		//loc = getInitialLocation();
 	}
 
 	/**
@@ -43,12 +43,17 @@ public class BetweenPOIsMovement extends MapBasedMovement {
 	public BetweenPOIsMovement(BetweenPOIsMovement smpm) {
 		super(smpm);
 		this.availablePoints = smpm.availablePoints;
-		this.loc = getInitialLocation();
+		//this.loc = getInitialLocation();
 	}
 
+	// Select a new location
 	public Coord getNextPoint() {
-		Random rand = new Random(); 
-        return availablePoints.get(rand.nextInt(availablePoints.size())); 
+		Coord chosen_loc;
+		int chosen_idx = rng.nextInt(availablePoints.size());
+		while ((chosen_loc = availablePoints.get(chosen_idx)) == this.loc) {
+			chosen_idx = rng.nextInt(availablePoints.size());
+		}
+        return chosen_loc; 
 	}
 	
 	/**
@@ -57,7 +62,9 @@ public class BetweenPOIsMovement extends MapBasedMovement {
 	 */
 	@Override
 	public Coord getInitialLocation() {
-		return getNextPoint();
+		Coord new_loc = getNextPoint();
+		this.loc = new_loc.clone();
+		return this.loc;
 	}
 
 	/**
@@ -123,7 +130,5 @@ public class BetweenPOIsMovement extends MapBasedMovement {
 
 		return coords;
 	}
-
-
 	
 }
