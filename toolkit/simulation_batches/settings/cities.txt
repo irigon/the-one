@@ -7,7 +7,7 @@
 Scenario.name = Group.router:%%Group.router%%_Group.bufferSize:%%Group.bufferSize%%_Group.msgTtl:%%Group.msgTtl%%_Events1.size:%%Events1.size%%_MovementModel.warmup:%%MovementModel.warmup%%_Events1.interval:%%Events1.interval%%
 
 Scenario.simulateConnections = true
-Scenario.updateInterval = 1.0
+Scenario.updateInterval = 0.1
 # 43200s == 12h
 Scenario.endTime = 50400
 
@@ -67,8 +67,6 @@ Group.msgTtl = 600
 Group2.speed=1,2
 Group2.waitTime=1,2
 Group2.nrofHosts=10
-Group2.active_window=10,20
-Group2.adaptive_routing=true
 Transit.restPeriod=10,20
 
 
@@ -139,6 +137,8 @@ PTW.secondsInTimeUnit = 1
 PTW.typicalInterval = 50
 PTW.beta = 0.9
 PTW.gamma = 0.999885791
+PTW.adaptive_routing=true
+PTW.active_window=10,20
 
 ## Optimization settings -- these affect the speed of the simulation
 ## see World class for details.
