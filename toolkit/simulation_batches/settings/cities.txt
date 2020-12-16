@@ -53,7 +53,7 @@ btInterface.transmitRange = 20
 
 
 #Group.router = [EpidemicRouter;ProphetV2Router;MaxPropRouter;SprayAndWaitRouter]
-Group.router = [EpidemicRouter;ProphetV2Router;SprayAndWaitRouter]
+Group.router = [EpidemicRouter;ProphetV2Router;SprayAndWaitRouter;PTWRouter]
 Group.bufferSize = 500G
 Group.waitTime = 10,15
 # All nodes have the bluetooth interface
@@ -64,7 +64,12 @@ Group.speed = 5,7
 # Message TTL of 300 minutes (5 hours)
 Group.msgTtl = 600
 
-
+Group2.speed=1,2
+Group2.waitTime=1,2
+Group2.nrofHosts=10
+Group2.active_window=10,20
+Group2.adaptive_routing=true
+Transit.restPeriod=10,20
 
 
 ## Message creation parameters
@@ -129,6 +134,11 @@ ProphetV2Router.beta = 0.9
 ProphetV2Router.gamma = 0.999885791
 SprayAndWaitRouter.nrofCopies = 6
 SprayAndWaitRouter.binaryMode = true
+PTW.secondsInTimeUnit = 30
+PTW.secondsInTimeUnit = 1
+PTW.typicalInterval = 50
+PTW.beta = 0.9
+PTW.gamma = 0.999885791
 
 ## Optimization settings -- these affect the speed of the simulation
 ## see World class for details.

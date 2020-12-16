@@ -11,6 +11,7 @@ import java.util.List;
 import movement.MovementModel;
 import movement.Path;
 import routing.MessageRouter;
+import routing.PTWRouter;
 import routing.util.RoutingInfo;
 
 import static core.Constants.DEBUG;
@@ -37,6 +38,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	private List<NetworkInterface> net;
 	private ModuleCommunicationBus comBus;
 
+
 	static {
 		DTNSim.registerForReset(DTNHost.class.getCanonicalName());
 		reset();
@@ -56,6 +58,7 @@ public class DTNHost implements Comparable<DTNHost> {
 			String groupId, List<NetworkInterface> interf,
 			ModuleCommunicationBus comBus,
 			MovementModel mmProto, MessageRouter mRouterProto) {
+
 		this.communicationSystemON = true;
 		this.comBus = comBus;
 		this.location = new Coord(0,0);
@@ -91,6 +94,7 @@ public class DTNHost implements Comparable<DTNHost> {
 				l.initialLocation(this, this.location);
 			}
 		}
+		
 	}
 
 	/**
@@ -349,7 +353,7 @@ public class DTNHost implements Comparable<DTNHost> {
 
 	private void set_pedestrian_radio() {
 		if (is_pedestrian()) {
-			if (SimClock.getTime() > 39600 && SimClock.getTime() < 61200){
+			if (((routing.PTWRouter) getRouter()).pedestrian_active_period()){
 				setCommunicationSystemON(true);
 			} else {
 				setCommunicationSystemON(false);

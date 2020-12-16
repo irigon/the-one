@@ -1,7 +1,7 @@
 /*
  * Copyright 2011 Aalto University, ComNet
  * Released under GPLv3. See LICENSE.txt for details.
- * The Original PRoPHET code updated to PRoPHETv2 router
+ * The Original PRoPHET code updated to PRoPHETv2 router -- this version is just an adaptation
  * by Samo Grasic(samo@grasic.net) - Jun 2011
  */
 package routing;
@@ -27,10 +27,9 @@ import core.SimClock;
 import util.Tuple;
 
 /**
- * Implementation of PRoPHETv2" router as described in
- * http://tools.ietf.org/html/draft-irtf-dtnrg-prophet-09
+ * Implementation of PRoPHET" with Time Window (PTW)
  */
-public class ProphetV2RouterWithTimeWindow extends ActiveRouter {
+public class PTWRouter extends ActiveRouter {
 	/** delivery predictability initialization constant*/
 	public static final double PEncMax = 0.5;
 	/** typical interconnection time in seconds*/
@@ -39,10 +38,16 @@ public class ProphetV2RouterWithTimeWindow extends ActiveRouter {
 	public static final double DEFAULT_BETA = 0.9;
 	/** delivery predictability aging constant */
 	public static final double DEFAULT_GAMMA = 0.999885791;
+	/** pedestrians communication window **/
+	public static final double[] DEF_PEDESTRIAN_ACTIVE_WINDOW = {0,Double.MAX_VALUE};
+	public static final String PEDESTRIAN_ACTIVE_WINDOW = "active_window";
+	/** flag to define whether the router adapts **/
+	public static final String ADAPTIVE_ROUTING = "adaptive_routing";
+
 	Random randomGenerator = new Random();
 
-	/** Prophet router's setting namespace ({@value})*/
-	public static final String PROPHET_NS = "ProphetV2Router";
+	/** PTW router's setting namespace ({@value})*/
+	public static final String PTW_NS = "PTW";
 	/**
 	 * Number of seconds in time unit -setting id ({@value}).
 	 * How many seconds one time unit is when calculating aging of
@@ -77,42 +82,59 @@ public class ProphetV2RouterWithTimeWindow extends ActiveRouter {
 	/** last delivery predictability update (sim)time */
 	private double lastAgeUpdate;
 	
-	private boolean active;
+	/** Period within wichi persons (P group) communicate **/
+	double[] p_active_window;
+	protected double begin_period;
+	protected double end_period;
 	
+	private boolean adaptive_routing;
 
 	/**
 	 * Constructor. Creates a new message router based on the settings in
 	 * the given Settings object.
 	 * @param s The settings object
 	 */
-	public ProphetV2RouterWithTimeWindow(Settings s) {
+	public PTWRouter(Settings s) {
 		super(s);
-		Settings prophetSettings = new Settings(PROPHET_NS);
-		secondsInTimeUnit = prophetSettings.getInt(SECONDS_IN_UNIT_S);
-		if (prophetSettings.contains(BETA_S)) {
-			beta = prophetSettings.getDouble(BETA_S);
+		Settings PTWSettings = new Settings(PTW_NS);
+		secondsInTimeUnit = PTWSettings.getInt(SECONDS_IN_UNIT_S);
+		if (PTWSettings.contains(BETA_S)) {
+			beta = PTWSettings.getDouble(BETA_S);
 		}
 		else {
 			beta = DEFAULT_BETA;
 		}
-		if (prophetSettings.contains(GAMMA_S)) {
-			gamma = prophetSettings.getDouble(GAMMA_S);
+		if (PTWSettings.contains(GAMMA_S)) {
+			gamma = PTWSettings.getDouble(GAMMA_S);
 		}
 		else {
 			gamma = DEFAULT_GAMMA;
 		}
 
+		if (PTWSettings.contains(PEDESTRIAN_ACTIVE_WINDOW)) {
+			p_active_window = PTWSettings.getCsvDoubles(PEDESTRIAN_ACTIVE_WINDOW, 2);
+		}
+		else {
+			p_active_window = DEF_PEDESTRIAN_ACTIVE_WINDOW;
+		}
+
+		if (PTWSettings.contains(ADAPTIVE_ROUTING)) {
+			adaptive_routing = PTWSettings.getBoolean(ADAPTIVE_ROUTING);
+		}
+
+		
+		begin_period = p_active_window[0];
+		end_period = p_active_window[1];
+		
 		initPreds();
 		initEncTimes();
-		active = true;
-		
 	}
 
 	/**
 	 * Copyc onstructor.
 	 * @param r The router prototype where setting values are copied from
 	 */
-	protected ProphetV2RouterWithTimeWindow(ProphetV2RouterWithTimeWindow r) {
+	protected PTWRouter(PTWRouter r) {
 		super(r);
 		this.secondsInTimeUnit = r.secondsInTimeUnit;
 		this.beta = r.beta;
@@ -211,19 +233,18 @@ public class ProphetV2RouterWithTimeWindow extends ActiveRouter {
 	 */
 	private void updateTransitivePreds(DTNHost host) {
 		MessageRouter otherRouter = host.getRouter();
-		assert otherRouter instanceof ProphetV2RouterWithTimeWindow :
-			"PRoPHETv2 only works with other routers of same type";
+		assert otherRouter instanceof PTWRouter :
+			"PTW only works with other routers of same type";
 
 		double pForHost = getPredFor(host); // P(a,b)
 		Map<DTNHost, Double> othersPreds =
-			((ProphetV2RouterWithTimeWindow)otherRouter).getDeliveryPreds();
+			((PTWRouter)otherRouter).getDeliveryPreds();
 
 		for (Map.Entry<DTNHost, Double> e : othersPreds.entrySet()) {
 			if (e.getKey() == getHost()) {
 				continue; // don't add yourself
 			}
 
-//ProphetV2 max(old,new)
 			double pOld = getPredFor(e.getKey()); // P(a,c)_old
 			double pNew = pForHost * e.getValue() * beta;
 			if(pNew>pOld)
@@ -262,11 +283,16 @@ public class ProphetV2RouterWithTimeWindow extends ActiveRouter {
 		ageDeliveryPreds(); // make sure the aging is done
 		return this.preds;
 	}
+	
+	public boolean pedestrian_active_period() {
+		return (SimClock.getTime() > begin_period && SimClock.getTime() < end_period );
+	}
 
 	@Override
 	public void update() {
+		
 		super.update();
-		if (!canStartTransfer() ||isTransferring()) {
+		if (!canStartTransfer() || isTransferring()) {
 			return; // nothing to transfer or is currently transferring
 		}
 
@@ -275,10 +301,12 @@ public class ProphetV2RouterWithTimeWindow extends ActiveRouter {
 			return;
 		}
 
-		// EPIDEMIC
-		if (this.getHost().is_pedestrian()) {
+		// in adaptive routing, during the period that pedestrians are active, stations flood.
+		if (this.getHost().is_pedestrian() || (adaptive_routing && pedestrian_active_period())) {
+			// EPIDEMIC
 			this.tryAllMessagesToAllConnections();
-		} else { // PTN --> PRoPHET 
+		// PTN --> PTW
+		} else { 	 
 			tryOtherMessages();
 		}
 	}
@@ -298,7 +326,7 @@ public class ProphetV2RouterWithTimeWindow extends ActiveRouter {
 		   probability of delivery by the other host */
 		for (Connection con : getConnections()) {
 			DTNHost other = con.getOtherNode(getHost());
-			ProphetV2RouterWithTimeWindow othRouter = (ProphetV2RouterWithTimeWindow)other.getRouter();
+			PTWRouter othRouter = (PTWRouter)other.getRouter();
 
 			if (othRouter.isTransferring()) {
 				continue; // skip hosts that are transferring
@@ -336,11 +364,11 @@ public class ProphetV2RouterWithTimeWindow extends ActiveRouter {
 		public int compare(Tuple<Message, Connection> tuple1,
 				Tuple<Message, Connection> tuple2) {
 			// delivery probability of tuple1's message with tuple1's connection
-			double p1 = ((ProphetV2RouterWithTimeWindow)tuple1.getValue().
+			double p1 = ((PTWRouter)tuple1.getValue().
 					getOtherNode(getHost()).getRouter()).getPredFor(
 					tuple1.getKey().getTo());
 			// -"- tuple2...
-			double p2 = ((ProphetV2RouterWithTimeWindow)tuple2.getValue().
+			double p2 = ((PTWRouter)tuple2.getValue().
 					getOtherNode(getHost()).getRouter()).getPredFor(
 					tuple2.getKey().getTo());
 
@@ -379,7 +407,7 @@ public class ProphetV2RouterWithTimeWindow extends ActiveRouter {
 
 	@Override
 	public MessageRouter replicate() {
-		ProphetV2RouterWithTimeWindow r = new ProphetV2RouterWithTimeWindow(this);
+		PTWRouter r = new PTWRouter(this);
 		return r;
 	}
 }

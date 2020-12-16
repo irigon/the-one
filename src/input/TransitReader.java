@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import core.Coord;
+import core.Settings;
 import core.SettingsError;
 import core.SimError;
 import movement.TransitStop;
@@ -35,6 +36,16 @@ public class TransitReader {
     private SimMap map;
     private long okMapType;
     private List<TransitStop> stops;
+	public static final String REST_PERIOD ="restPeriod";
+	public static final double[] DEF_REST_PERIOD = {0.0,0.0};
+	/** Transit's setting namespace ({@value})*/
+	public static final String TRANSIT_NS = "Transit";
+	double[] restPeriod;
+	protected double begin_period;
+	protected double end_period;
+
+
+
 
     /*
      * We currently consider 1 stopFile and 1 scheduleFile.
@@ -45,6 +56,19 @@ public class TransitReader {
 			String nodesFilename, 
 			SimMap map,
 			long okMap) {
+
+		Settings transitSettings = new Settings(TRANSIT_NS);
+		if (transitSettings.contains(REST_PERIOD)) {
+			restPeriod = transitSettings.getCsvDoubles(REST_PERIOD, 2);
+		}
+		else {
+			restPeriod = DEF_REST_PERIOD;
+		}
+
+		begin_period = restPeriod[0];
+		end_period = restPeriod[1];
+		
+		
 		this.stopsFilename = stopsFilename;
 		this.scheduleFilename = scheduleFilename;
 		this.nodesFilename = nodesFilename;
@@ -178,6 +202,10 @@ public class TransitReader {
 			tr_curr_line = getTripFromLine(line);
 			depart_time = tr_curr_line.getStartTime();
 
+			// exclude trips within restPeriod
+			if (depart_time > begin_period && depart_time < end_period) {
+				continue;
+			}
 			// if key not in map, add list
 			if (schedule.get(depart_time) == null) {
 				schedule.put(depart_time, new ArrayList<TransitTrip>());
