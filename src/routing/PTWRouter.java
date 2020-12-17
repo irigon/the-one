@@ -139,6 +139,10 @@ public class PTWRouter extends ActiveRouter {
 		this.secondsInTimeUnit = r.secondsInTimeUnit;
 		this.beta = r.beta;
 		this.gamma = r.gamma;
+		this.begin_period = r.begin_period;
+		this.end_period = r.end_period;
+		this.adaptive_routing = r.adaptive_routing;
+
 		initPreds();
 		initEncTimes();
 	}
