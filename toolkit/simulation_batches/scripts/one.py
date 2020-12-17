@@ -40,7 +40,7 @@ def backup_configuration_file(default_config, config_name):
 
 def get_template(router):
     template = "{}_router:{}_bSize:{}_Ttl:{}_Events1.size:{}_endTime:{}_warmup:{}_Events1.interval:{}_updateInt:{}_tSpeed:{}_tRange:{}_seed:{}"
-    if router.startswith('ProphetV2Router'):
+    if router == 'ProphetV2Router':
         template += '_beta:{}_gamma:{}'
     elif router == 'SprayAndWaitRouter':
         template += '_SaWbin:{}_SaWcp:{}'
@@ -48,7 +48,7 @@ def get_template(router):
 
 def extended_variable_list(d):
     l =  ['Group.router','Group.bufferSize','Group.msgTtl','Events1.size','Scenario.endTime','Report.warmup','Events1.interval','Scenario.updateInterval','btInterface.transmitSpeed','btInterface.transmitRange','MovementModel.rngSeed']
-    if d['Group.router'].startswith('ProphetV2Router'):
+    if d['Group.router'] == 'ProphetV2Router':
         l.extend(PROPHET_EXCLUSIVE_FIELDS)
     if d['Group.router'] == 'SprayAndWaitRouter':
         l.extend(SPRAYANDWAIT_EXCLUSIVE_FIELDS)
@@ -70,7 +70,7 @@ ONE_variable = ['Group.router','Group.bufferSize','Group.msgTtl','Events1.size',
 
 
 for item in dict_list:
-    if item['Group.router'].startswith('ProphetV2Router'):
+    if item['Group.router'] != 'ProphetV2Router':
         for i in PROPHET_EXCLUSIVE_FIELDS:
             item.pop(i, None)
     if item['Group.router'] != 'SprayAndWaitRouter':
