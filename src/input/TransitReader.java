@@ -254,6 +254,17 @@ public class TransitReader {
 		int endIndex = Integer.parseInt(columns[2]);
 		TripDirection td = startIndex < endIndex ? TripDirection.FORWARD : TripDirection.BACKWARD;
 		
+		if (startIndex > this.stops.size() - 1) {
+			System.out.println("Depart station out of bounds. A trip shoud start at index " + startIndex + 
+					", but only stations from 0 to " + (this.stops.size() - 1) + " are defined");
+			System.exit(1);
+		}
+		if (endIndex > this.stops.size() - 1) {
+			System.out.println("Arrival station out of bounds. A trip shoud start at index " + startIndex + 
+					", but only stations from 0 to " + (this.stops.size() - 1) + " are defined");
+			System.exit(1);
+		}
+		
 		return (new TransitTrip(seconds, this.stops.get(startIndex), this.stops.get(endIndex), td));
 	}
 

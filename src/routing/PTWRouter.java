@@ -125,6 +125,7 @@ public class PTWRouter extends ActiveRouter {
 		
 		begin_period = p_active_window[0];
 		end_period = p_active_window[1];
+        System.out.println("Begin Period:" + begin_period + ", end period: " + end_period);
 		
 		initPreds();
 		initEncTimes();
@@ -165,8 +166,10 @@ public class PTWRouter extends ActiveRouter {
 	public void changedConnection(Connection con) {
 		if (con.isUp()) {
 			DTNHost otherHost = con.getOtherNode(getHost());
-			updateDeliveryPredFor(otherHost);
-			updateTransitivePreds(otherHost);
+			if (adaptive_routing && !otherHost.is_pedestrian()) {
+				updateDeliveryPredFor(otherHost);
+				updateTransitivePreds(otherHost);
+			}
 		}
 	}
 
