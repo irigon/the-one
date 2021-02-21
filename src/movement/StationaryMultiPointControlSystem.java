@@ -74,7 +74,8 @@ public class StationaryMultiPointControlSystem {
 		if (!availablePoints.isEmpty()) {
 			return availablePoints.remove(0);
 		}
-		System.out.println("No more available Points to retrieve!");
+		System.out.println("No more available Points to retrieve! Check stations.wkt/$line_stops.csv and the number of stations in the settings file");
+        System.exit(1);
 		return new Coord(0,0);
 	}
 
