@@ -11,6 +11,7 @@ import java.util.List;
 import movement.MovementModel;
 import movement.Path;
 import routing.MessageRouter;
+import routing.PTWRouter;
 import routing.util.RoutingInfo;
 
 import static core.Constants.DEBUG;
@@ -37,6 +38,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	private List<NetworkInterface> net;
 	private ModuleCommunicationBus comBus;
 
+
 	static {
 		DTNSim.registerForReset(DTNHost.class.getCanonicalName());
 		reset();
@@ -56,6 +58,7 @@ public class DTNHost implements Comparable<DTNHost> {
 			String groupId, List<NetworkInterface> interf,
 			ModuleCommunicationBus comBus,
 			MovementModel mmProto, MessageRouter mRouterProto) {
+
 		this.communicationSystemON = true;
 		this.comBus = comBus;
 		this.location = new Coord(0,0);
@@ -91,6 +94,7 @@ public class DTNHost implements Comparable<DTNHost> {
 				l.initialLocation(this, this.location);
 			}
 		}
+		
 	}
 
 	/**
@@ -347,17 +351,34 @@ public class DTNHost implements Comparable<DTNHost> {
 		forceConnection(h,null,true);
 	}
 
+	private void set_pedestrian_radio() {
+		if (is_pedestrian()) {
+			if (this.router.getClass() == routing.PTWRouter.class && ((routing.PTWRouter)getRouter()).pedestrian_active_period()){
+				setCommunicationSystemON(true);
+			} else {
+				setCommunicationSystemON(false);
+			}
+		}
+	}
+	
+	public boolean is_pedestrian( ) {
+		return (this.name.charAt(0) == 'p');
+	}
+		
+	
 	/**
 	 * Updates node's network layer and router.
 	 * @param simulateConnections Should network layer be updated too
 	 */
 	public void update(boolean simulateConnections) {
+		set_pedestrian_radio();
 		if (!isRadioActive()) {
 			// Make sure inactive nodes don't have connections
 			tearDownAllConnections();
 
+			
             // TODO: change this 5 min to be configurable
-			if (SimClock.getTime() > this.nextTimeToMove - 300) {
+			if (SimClock.getTime() > this.nextTimeToMove - 300 && !is_pedestrian()){
                 setCommunicationSystemON(true);
             }
 
@@ -411,8 +432,6 @@ public class DTNHost implements Comparable<DTNHost> {
 				return;
 			}
 			
-			// A device will move, start the communication system
-			//setCommunicationSystemON(true);
 		}
 
 		possibleMovement = timeIncrement * speed;
