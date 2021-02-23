@@ -9,7 +9,7 @@ Scenario.name = Group.router:%%Group.router%%_Group.bufferSize:%%Group.bufferSiz
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
-Scenario.endTime = 50400
+Scenario.endTime = 86400
 
 ## Interface-specific settings:
 # type : which interface class the interface belongs to
@@ -21,8 +21,8 @@ Scenario.endTime = 50400
 # "Bluetooth" interface for all nodes
 btInterface.type = SimpleBroadcastInterface
 # Transmit speed of 2 Mbps = 250kBps
-btInterface.transmitSpeed = 100M
-btInterface.transmitRange = 20
+btInterface.transmitSpeed = 1M
+btInterface.transmitRange = 80
 
 # High speed, long range, interface for group 4
 #highspeedInterface.type = SimpleBroadcastInterface
@@ -54,7 +54,7 @@ btInterface.transmitRange = 20
 
 #Group.router = [EpidemicRouter;ProphetV2Router;MaxPropRouter;SprayAndWaitRouter]
 Group.router = [EpidemicRouter;ProphetV2Router;SprayAndWaitRouter;PTWRouter]
-Group.bufferSize = 500G
+Group.bufferSize = 1000G
 Group.waitTime = 10,15
 # All nodes have the bluetooth interface
 Group.nrofInterfaces = 1
@@ -62,12 +62,7 @@ Group.interface1 = btInterface
 # Walking speeds
 Group.speed = 5,7
 # Message TTL of 300 minutes (5 hours)
-Group.msgTtl = 600
-
-Group2.speed=1,2
-Group2.waitTime=1,2
-Group2.nrofHosts=10
-Transit.restPeriod=10,20
+Group.msgTtl = 1440
 
 
 ## Message creation parameters
@@ -77,13 +72,14 @@ Events.nrof = 1
 Events1.class = MessageEventGenerator
 # (following settings are specific for the MessageEventGenerator class)
 # Creation interval in seconds (one new message every 25 to 35 seconds)
-Events1.interval = 25,35
+Events1.interval = 6
 # Message sizes (500kB - 100MB)
-Events1.size = 500k,100M
+Events1.size = 1M
 # range of message source/destination addresses
 Events1.hosts = 0,126
 # Message ID prefix
 Events1.prefix = M
+Events1.time = 0,72000
 
 
 ## Movement model settings
@@ -117,7 +113,7 @@ Report.report1 = MessageStatsReport
 Report.report2 = ContactTimesReport
 Report.report3 = ContactsPerHourReport
 Report.report4 = CreatedMessagesReport
-Report.report5 = MessageDelayReport 
+Report.report5 = MessageDelayReport
 Report.report6 = BufferOccupancyReport
 Report.report7 = DeliveredMessagesReport
 Report.report8 = MessageDeliveryReport
@@ -137,8 +133,8 @@ PTW.secondsInTimeUnit = 1
 PTW.typicalInterval = 50
 PTW.beta = 0.9
 PTW.gamma = 0.999885791
-PTW.adaptive_routing=true
-PTW.active_window=10,20
+PTW.adaptive_routing = true
+#PTW.active_window=10,20
 
 ## Optimization settings -- these affect the speed of the simulation
 ## see World class for details.
