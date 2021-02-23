@@ -81,7 +81,7 @@ Events1.size = 1M
 Events1.hosts = 0,126
 # Message ID prefix
 Events1.prefix = M
-Events1.time = 36000,54000
+Events1.time = 0,72000
 
 
 ## Movement model settings
