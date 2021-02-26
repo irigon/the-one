@@ -1,4 +1,3 @@
-#Scenario.name = freiburgSplittedFreq30min
 Scenario.nrofHostGroups = 6
 
 Group1.groupID = S
@@ -22,7 +21,7 @@ Group3.movementModel = TransitMapMovement
 Group3.routeFile = data/freiburgSplittedFreq30min/2_stops.csv
 Group3.scheduleFile = data/freiburgSplittedFreq30min/2_schedule.csv
 Group3.routeType = 2
-Group3.nrofHosts = 3
+Group3.nrofHosts = 2
 Group3.okMaps = 2
 
 
