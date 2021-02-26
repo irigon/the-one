@@ -1,4 +1,3 @@
-Scenario.name = freiburgUnsplittedFreq30min
 Scenario.nrofHostGroups = 6
 
 Group1.groupID = S
