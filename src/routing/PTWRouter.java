@@ -47,7 +47,7 @@ public class PTWRouter extends ActiveRouter {
 	Random randomGenerator = new Random();
 
 	/** PTW router's setting namespace ({@value})*/
-	public static final String PTW_NS = "PTW";
+	public static final String PTW_NS = "PTWRouter";
 	/**
 	 * Number of seconds in time unit -setting id ({@value}).
 	 * How many seconds one time unit is when calculating aging of

@@ -76,7 +76,8 @@ for scenario in SCENARIO_LIST:
         scenario_name = scenario.split('_')[0]
 
         # function that gets the respective entry for a name
-        variable_list = ['Group.router','Events1.size','Scenario.endTime','Events1.interval','PTW.beta', 'PTW.gamma']
+        variable_list = ['Group.router','Events1.size','Scenario.endTime','Events1.interval','PTWRouter.beta', 'PTWRouter.gamma']
+        #variable_list = ['Group.router','Events1.size','Scenario.endTime','Events1.interval','ProphetV2Router.beta', 'ProphetV2Router.gamma']
         name_from_dict = lambda x: entry[x]
 
         template = get_template()

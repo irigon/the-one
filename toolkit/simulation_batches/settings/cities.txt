@@ -128,13 +128,13 @@ ProphetV2Router.beta = 0.9
 ProphetV2Router.gamma = 0.999885791
 SprayAndWaitRouter.nrofCopies = 6
 SprayAndWaitRouter.binaryMode = true
-PTW.secondsInTimeUnit = 30
-PTW.secondsInTimeUnit = 1
-PTW.typicalInterval = 50
-PTW.beta = 0.9
-PTW.gamma = 0.999885791
-PTW.adaptive_routing = true
-#PTW.active_window=10,20
+PTWRouter.secondsInTimeUnit = 30
+PTWRouter.secondsInTimeUnit = 1
+PTWRouter.typicalInterval = 50
+PTWRouter.beta = 0.9
+PTWRouter.gamma = 0.999885791
+PTWRouter.adaptive_routing = true
+PTWRouter.active_window=0,0
 
 ## Optimization settings -- these affect the speed of the simulation
 ## see World class for details.
