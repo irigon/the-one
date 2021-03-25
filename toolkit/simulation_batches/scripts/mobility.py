@@ -43,7 +43,7 @@ def backup_configuration_file(default_config, config_name):
 # router name, bundle size, simulation time, event interval, beta, gamma, alternative mobility speed, waiting time, number of alternative mobiles, communication window, adaptivo?
 
 def get_template():
-    template = "{}_router:{}_EventSize:{}_endTime:{}_Events1.interval:{}_beta:{}_gamma:{}_altMobSpeed:{}_waitTime:{}_numMob:{}_commWin:{}_adaptive:{}"
+    template = "{}_router:{}_EventSize:{}_endTime:{}_Events1.interval:{}_beta:{}_gamma:{}_altMobSpeed:{}_waitTime:{}_numMob:{}_commWin:{}_adaptive:{}_mobRest:{}"
     return template
 
 def extended_variable_list(d):

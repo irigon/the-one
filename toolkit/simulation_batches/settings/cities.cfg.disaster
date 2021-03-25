@@ -1,0 +1,26 @@
+#Group.router=ProphetV2Router
+Group.router=PTWRouter
+Group.bufferSize=1000G
+# TTL (minutes) 300-->5h; 5h, 10h, 20h, 4320 --> 3d
+Group.msgTtl=1440
+Events1.size=1M
+Report.warmup=0
+Scenario.endTime=86400
+Events1.interval=1;6;20
+Scenario.updateInterval=0.1
+# PTW related
+PTWRouter.beta=0.9
+PTWRouter.gamma=0.999885791;1.0
+# Window
+PTW.adaptive_routing=true;false
+PTW.active_window=32400,68400
+# Transit
+Transit.restPeriod=32400,68400
+# First Aid
+Group2.speed=10,13
+Group2.interval=5,7;10,13
+Group2.waitTime=1200;2400
+Group2.nrofHosts=5;10;30;50
+btInterface.transmitSpeed=1M
+btInterface.transmitRange=80
+MovementModel.rngSeed=1
