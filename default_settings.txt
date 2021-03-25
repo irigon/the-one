@@ -9,7 +9,7 @@ Scenario.name = freiburg1True_router:%%Group.router%%_bSize:%%Group.bufferSize%%
 Scenario.simulateConnections = true
 Scenario.updateInterval = 0.1
 # 43200s == 12h
-Scenario.endTime = 604800
+Scenario.endTime = 86400
 
 ## Interface-specific settings:
 # type : which interface class the interface belongs to
@@ -21,13 +21,13 @@ Scenario.endTime = 604800
 # "Bluetooth" interface for all nodes
 btInterface.type = SimpleBroadcastInterface
 # Transmit speed of 2 Mbps = 250kBps
-btInterface.transmitSpeed = 100M
-btInterface.transmitRange = 20
+btInterface.transmitSpeed = 1M
+btInterface.transmitRange = 80
 
 # High speed, long range, interface for group 4
-highspeedInterface.type = SimpleBroadcastInterface
-highspeedInterface.transmitSpeed = 10M
-highspeedInterface.transmitRange = 200
+#highspeedInterface.type = SimpleBroadcastInterface
+#highspeedInterface.transmitSpeed = 10M
+#highspeedInterface.transmitRange = 200
 
 # Define 6 different node groups
 
@@ -53,7 +53,7 @@ highspeedInterface.transmitRange = 200
 
 
 #Group.router = [EpidemicRouter;ProphetV2Router;MaxPropRouter;SprayAndWaitRouter]
-Group.router = ProphetV2Router
+Group.router = PTWRouter
 Group.bufferSize = 1000G
 Group.waitTime = 10,15
 # All nodes have the bluetooth interface
@@ -62,7 +62,7 @@ Group.interface1 = btInterface
 # Walking speeds
 Group.speed = 5,7
 # Message TTL of 300 minutes (5 hours)
-Group.msgTtl = 400
+Group.msgTtl = 1440
 
 
 
@@ -74,13 +74,14 @@ Events.nrof = 1
 Events1.class = MessageEventGenerator
 # (following settings are specific for the MessageEventGenerator class)
 # Creation interval in seconds (one new message every 25 to 35 seconds)
-Events1.interval = 60
+Events1.interval = 1
 # Message sizes (500kB - 100MB)
-Events1.size = 100k,100M
+Events1.size = 1M
 # range of message source/destination addresses
 Events1.hosts = 0,126
 # Message ID prefix
 Events1.prefix = M
+Events1.time = 0,72000
 
 
 ## Movement model settings
@@ -96,7 +97,15 @@ MovementModel.warmup = 0
 ## Reports - all report names have to be valid report classes
 
 # how many reports to load
-Report.nrofReports = 1
+Report.nrofReports = 9
+Report.granularity = 60
+Report.occupancyInterval = 60
+Report.outputGnuplot = true
+# DensityReport
+Report.onlyAverage = true
+Report.xCount = 100
+Report.yCount = 100
+Report.sampleInterval = 30
 # length of the warm up period (simulated seconds)
 Report.warmup = 0
 # default directory of reports (can be overridden per Report with output setting)
@@ -104,6 +113,14 @@ Report.reportDir = reports/
 # Report classes to load
 Report.report1 = MessageStatsReport
 Report.report2 = ContactTimesReport
+Report.report3 = ContactsPerHourReport
+Report.report4 = CreatedMessagesReport
+Report.report5 = MessageDelayReport
+Report.report6 = BufferOccupancyReport
+Report.report7 = DeliveredMessagesReport
+Report.report8 = MessageDeliveryReport
+Report.report9 = NodeDensityReport
+
 
 ## Default settings for some routers settings
 ProphetRouter.secondsInTimeUnit = 30
@@ -113,6 +130,13 @@ ProphetV2Router.beta = 0.9
 ProphetV2Router.gamma = 0.999885791
 SprayAndWaitRouter.nrofCopies = 6
 SprayAndWaitRouter.binaryMode = true
+PTW.secondsInTimeUnit = 30
+PTW.secondsInTimeUnit = 1
+PTW.typicalInterval = 50
+PTW.beta = 0.9
+PTW.gamma = 1.0
+PTW.adaptive_routing = true
+#PTW.active_window = 7500,15000
 
 ## Optimization settings -- these affect the speed of the simulation
 ## see World class for details.

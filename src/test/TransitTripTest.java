@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-import java.util.TreeMap;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -87,22 +85,5 @@ class TransitTripTest {
         	}
         }
 	}
-
-//	@Test
-//	void testTripTime2() {
-//		Collection<ArrayList<TransitTrip>> tripLists;
-//        tripLists = get_trip_lists("test_configurations/trip_tests/settings2.txt");
-//        int counter = 0;
-//        ArrayList<Integer> results = new ArrayList<Integer>();
-//        
-//        for (ArrayList<TransitTrip> al: tripLists) {
-//        	for (TransitTrip t: al) {
-//        		int arrival = t.getArrivalTime();
-//        		assertEquals(arrival, 1530);
-//        		counter++;
-//        	}
-//        }
-//        System.out.println("bla");
-//	}
 
 }
