@@ -12,8 +12,8 @@ Scenario.updateInterval=0.1
 PTWRouter.beta=0.9
 PTWRouter.gamma=0.999885791;1.0
 # Window
-PTW.adaptive_routing=true;false
-PTW.active_window=32400,68400
+PTWRouter.adaptive_routing=true;false
+PTWRouter.active_window=32400,68400
 # Transit
 Transit.restPeriod=32400,68400
 # First Aid
