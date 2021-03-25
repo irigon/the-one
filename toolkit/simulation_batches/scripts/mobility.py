@@ -47,7 +47,7 @@ def get_template():
     return template
 
 def extended_variable_list(d):
-    l =  ['Group.router','Events1.size','Scenario.endTime','Events1.interval','PTW.beta', 'PTW.gamma', 'Group2.speed', 'Group2.waitTime', 'Group2.nrofHosts', 'PTW.active_window', 'PTW.adaptive_routing','Transit.restPeriod']
+    l =  ['Group.router','Events1.size','Scenario.endTime','Events1.interval','PTWRouter.beta', 'PTWRouter.gamma', 'Group2.speed', 'Group2.waitTime', 'Group2.nrofHosts', 'PTWRouter.active_window', 'PTWRouter.adaptive_routing','Transit.restPeriod']
     return l
 
 os.chdir(THE_ONE_PATH)
