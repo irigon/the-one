@@ -157,3 +157,12 @@ GUI.UnderlayImage.rotate = -0.015
 GUI.EventLogPanel.nrofEvents = 0
 # Regular Expression log filter (see Pattern-class from the Java API for RE-matching details)
 #GUI.EventLogPanel.REfilter = .*p[1-9]<->p[1-9]$
+
+
+# Group 2 settings. This settings are only valid for the disaster adaptive variant
+# For any other simulation this should be deleted, since it would change whoever becomes group2
+Group2.speed=10,13
+Group2.interval=5,7;10,13
+Group2.waitTime=1200;2400
+Group2.nrofHosts=5;10;30;50
+Transit.restPeriod=32400,68400
