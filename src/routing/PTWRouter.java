@@ -166,10 +166,18 @@ public class PTWRouter extends ActiveRouter {
 	public void changedConnection(Connection con) {
 		if (con.isUp()) {
 			DTNHost otherHost = con.getOtherNode(getHost());
-			if (adaptive_routing && !otherHost.is_pedestrian()) {
-				updateDeliveryPredFor(otherHost);
-				updateTransitivePreds(otherHost);
+			// Ta certo isso? E quando nao for adaptivo? Simplesmente todos nodes nao fazem update?
+			//if (adaptive_routing && !otherHost.is_pedestrian()) {
+			// For a PRoPHET host this should be transparent. Porem, os firstAid nao existem fora do periodo ativo
+			if (
+					(getHost().is_pedestrian() || otherHost.is_pedestrian()) && // se um participante for pedestre
+					!pedestrian_active_period()									// fora to periodo ativo, return
+				) 
+			{
+				return;
 			}
+			updateDeliveryPredFor(otherHost);
+			updateTransitivePreds(otherHost);
 		}
 	}
 
@@ -303,14 +311,25 @@ public class PTWRouter extends ActiveRouter {
 			return; // nothing to transfer or is currently transferring
 		}
 
+		// fora do periodo ativo, pedestres (1st Aid) nao trocam mensagens
+		if (this.getHost().is_pedestrian() && !pedestrian_active_period()) {
+            return; 
+        }
+
 		// try messages that could be delivered to final recipient
 		if (exchangeDeliverableMessages() != null) {
 			return;
 		}
 
-		// in adaptive routing, during the period that pedestrians are active, stations flood.
-		if (this.getHost().is_pedestrian() || (adaptive_routing && pedestrian_active_period())) {
-			// EPIDEMIC
+        // pedestres se comunicam durante a janela de comunicacao
+		// LEFT: in adaptive routing, during the period that pedestrians are active, stations also flood.
+		// RIGHT: if the host is a pedestrian, it is in the active period and should flood
+		// If it is a station, that is not adaptive, it should still route with PRoPHET
+		if (
+				(adaptive_routing && pedestrian_active_period()) || 
+				(this.getHost().is_pedestrian())) 
+		{
+		// EPIDEMIC
 			this.tryAllMessagesToAllConnections();
 		// PTN --> PTW
 		} else { 	 
