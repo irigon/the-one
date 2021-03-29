@@ -28,6 +28,7 @@ import util.Tuple;
 
 /**
  * Implementation of PRoPHET" with Time Window (PTW)
+ * In this version, the routing adapts during the TIME_WINDOW
  */
 public class PTWRouter extends ActiveRouter {
 	/** delivery predictability initialization constant*/
