@@ -38,9 +38,9 @@ public class PTWRouter extends ActiveRouter {
 	public static final double DEFAULT_BETA = 0.9;
 	/** delivery predictability aging constant */
 	public static final double DEFAULT_GAMMA = 0.999885791;
-	/** pedestrians communication window **/
-	public static final double[] DEF_PEDESTRIAN_ACTIVE_WINDOW = {0,Double.MAX_VALUE};
-	public static final String PEDESTRIAN_ACTIVE_WINDOW = "active_window";
+	/** active window **/
+	public static final double[] DEF_ACTIVE_WINDOW = {0,Double.MAX_VALUE};
+	public static final String ACTIVE_WINDOW = "active_window";
 	/** flag to define whether the router adapts **/
 	public static final String ADAPTIVE_ROUTING = "adaptive_routing";
 
@@ -111,11 +111,11 @@ public class PTWRouter extends ActiveRouter {
 			gamma = DEFAULT_GAMMA;
 		}
 
-		if (PTWSettings.contains(PEDESTRIAN_ACTIVE_WINDOW)) {
-			p_active_window = PTWSettings.getCsvDoubles(PEDESTRIAN_ACTIVE_WINDOW, 2);
+		if (PTWSettings.contains(ACTIVE_WINDOW)) {
+			p_active_window = PTWSettings.getCsvDoubles(ACTIVE_WINDOW, 2);
 		}
 		else {
-			p_active_window = DEF_PEDESTRIAN_ACTIVE_WINDOW;
+			p_active_window = DEF_ACTIVE_WINDOW;
 		}
 
 		if (PTWSettings.contains(ADAPTIVE_ROUTING)) {
@@ -166,10 +166,8 @@ public class PTWRouter extends ActiveRouter {
 	public void changedConnection(Connection con) {
 		if (con.isUp()) {
 			DTNHost otherHost = con.getOtherNode(getHost());
-			if (adaptive_routing && !otherHost.is_pedestrian()) {
-				updateDeliveryPredFor(otherHost);
-				updateTransitivePreds(otherHost);
-			}
+            updateDeliveryPredFor(otherHost);
+            updateTransitivePreds(otherHost);
 		}
 	}
 
@@ -291,7 +289,7 @@ public class PTWRouter extends ActiveRouter {
 		return this.preds;
 	}
 	
-	public boolean pedestrian_active_period() {
+	public boolean active_period() {
 		return (SimClock.getTime() > begin_period && SimClock.getTime() < end_period );
 	}
 
@@ -308,8 +306,8 @@ public class PTWRouter extends ActiveRouter {
 			return;
 		}
 
-		// in adaptive routing, during the period that pedestrians are active, stations flood.
-		if (this.getHost().is_pedestrian() || (adaptive_routing && pedestrian_active_period())) {
+		// in adaptive routing, during the active period, stations flood.
+		if (adaptive_routing && active_period()) {
 			// EPIDEMIC
 			this.tryAllMessagesToAllConnections();
 		// PTN --> PTW

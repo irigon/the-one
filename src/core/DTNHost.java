@@ -353,7 +353,7 @@ public class DTNHost implements Comparable<DTNHost> {
 
 	private void set_pedestrian_radio() {
 		if (is_pedestrian()) {
-			if (this.router.getClass() == routing.PTWRouter.class && ((routing.PTWRouter)getRouter()).pedestrian_active_period()){
+			if (this.router.getClass() == routing.PTWRouter.class && ((routing.PTWRouter)getRouter()).active_period()){
 				setCommunicationSystemON(true);
 			} else {
 				setCommunicationSystemON(false);
