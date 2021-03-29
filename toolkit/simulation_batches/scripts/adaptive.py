@@ -45,7 +45,7 @@ def backup_configuration_file(default_config, config_name):
 # router name, bundle size, simulation time, event interval, beta, gamma, alternative mobility speed, waiting time, number of alternative mobiles, communication window, adaptivo?
 
 def get_template():
-    return "{}_router:{}_EventSize:{}_endTime:{}_Events1.interval:{}_beta:{}_gamma:{}"
+    return "{}_router:{}_EventSize:{}_endTime:{}_Events1.interval:{}_beta:{}_gamma:{}_activeWindow:{}_adaptive:{}"
 
 os.chdir(THE_ONE_PATH)
 dst_config = SETTINGS_DIR + "tmp.txt"
@@ -76,7 +76,7 @@ for scenario in SCENARIO_LIST:
         scenario_name = scenario.split('_')[0]
 
         # function that gets the respective entry for a name
-        variable_list = ['Group.router','Events1.size','Scenario.endTime','Events1.interval','PTWRouter.beta', 'PTWRouter.gamma']
+        variable_list = ['Group.router','Events1.size','Scenario.endTime','Events1.interval','PTWRouter.beta', 'PTWRouter.gamma', 'PTWRouter.active_window', 'PTWRouter.adaptive_routing']
         #variable_list = ['Group.router','Events1.size','Scenario.endTime','Events1.interval','ProphetV2Router.beta', 'ProphetV2Router.gamma']
         name_from_dict = lambda x: entry[x]
 
