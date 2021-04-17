@@ -133,6 +133,7 @@ PTWRouter.secondsInTimeUnit = 1
 PTWRouter.typicalInterval = 50
 PTWRouter.beta = 0.9
 PTWRouter.gamma = 0.999885791
+PTWRouter.altGamma = 0.999885791
 PTWRouter.adaptive_routing = true
 PTWRouter.active_window=0,0
 

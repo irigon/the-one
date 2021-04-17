@@ -66,6 +66,7 @@ public class PTWRouter extends ActiveRouter {
 	 * Default value for setting is {@link #DEFAULT_GAMMA}.
 	 */
 	public static final String GAMMA_S = "gamma";
+	public static final String ALT_GAMMA_S = "altGamma";
 
 	/** the value of nrof seconds in time unit -setting */
 	private int secondsInTimeUnit;
@@ -73,6 +74,7 @@ public class PTWRouter extends ActiveRouter {
 	private double beta;
 	/** value of gamma setting */
 	private double gamma;
+	private double alt_gamma;
 
 	/** delivery predictabilities */
 	private Map<DTNHost, Double> preds;
@@ -112,6 +114,16 @@ public class PTWRouter extends ActiveRouter {
 			gamma = DEFAULT_GAMMA;
 		}
 
+        // if alternative gamma is not set, set it to the default gamma
+		if (PTWSettings.contains(ALT_GAMMA_S)) {
+			alt_gamma = PTWSettings.getDouble(ALT_GAMMA_S);
+	        System.out.println("Alternative Gamma set to:" + alt_gamma);
+		}
+		else {
+			alt_gamma = gamma;
+		}
+        
+
 		if (PTWSettings.contains(ACTIVE_WINDOW)) {
 			p_active_window = PTWSettings.getCsvDoubles(ACTIVE_WINDOW, 2);
 		}
@@ -120,7 +132,9 @@ public class PTWRouter extends ActiveRouter {
 		}
 
 		if (PTWSettings.contains(ADAPTIVE_ROUTING)) {
+			
 			adaptive_routing = PTWSettings.getBoolean(ADAPTIVE_ROUTING);
+	        System.out.println("Adaptive Routing:" + adaptive_routing);
 		}
 
 		
@@ -141,6 +155,7 @@ public class PTWRouter extends ActiveRouter {
 		this.secondsInTimeUnit = r.secondsInTimeUnit;
 		this.beta = r.beta;
 		this.gamma = r.gamma;
+		this.alt_gamma = r.alt_gamma;
 		this.begin_period = r.begin_period;
 		this.end_period = r.end_period;
 		this.adaptive_routing = r.adaptive_routing;
@@ -274,6 +289,11 @@ public class PTWRouter extends ActiveRouter {
 		}
 
 		double mult = Math.pow(gamma, timeDiff);
+        /* if adaptive = True, use alternative gamma during adaptive period */
+        if (adaptive_routing && active_period()) {
+            mult = Math.pow(alt_gamma, timeDiff);
+        }
+
 		for (Map.Entry<DTNHost, Double> e : preds.entrySet()) {
 			e.setValue(e.getValue()*mult);
 		}
