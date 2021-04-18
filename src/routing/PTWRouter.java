@@ -288,10 +288,12 @@ public class PTWRouter extends ActiveRouter {
 			return;
 		}
 
-		double mult = Math.pow(gamma, timeDiff);
+		double mult = 0.0;
         /* if adaptive = True, use alternative gamma during adaptive period */
         if (adaptive_routing && active_period()) {
             mult = Math.pow(alt_gamma, timeDiff);
+        } else {
+        	mult = Math.pow(gamma, timeDiff);
         }
 
 		for (Map.Entry<DTNHost, Double> e : preds.entrySet()) {
@@ -327,14 +329,7 @@ public class PTWRouter extends ActiveRouter {
 			return;
 		}
 
-		// in adaptive routing, during the active period, stations flood.
-		if (adaptive_routing && active_period()) {
-			// EPIDEMIC
-			this.tryAllMessagesToAllConnections();
-		// PTN --> PTW
-		} else { 	 
-			tryOtherMessages();
-		}
+		tryOtherMessages();
 	}
 
 	/**
